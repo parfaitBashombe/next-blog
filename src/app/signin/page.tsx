@@ -1,112 +1,128 @@
 "use client";
 
 import { useState } from "react";
-import { FaGithub } from "react-icons/fa6";
-import { FcGoogle } from "react-icons/fc";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
 
-export default function AuthPage() {
-  const [isSignIn, setIsSignIn] = useState(true);
-  const [name, setName] = useState("");
+export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isSignIn) {
-      alert(`Sign In!\nEmail: ${email}\nPassword: ${password}`);
-    } else {
-      alert(`Sign Up!\nName: ${name}\nEmail: ${email}\nPassword: ${password}`);
-    }
-    setName("");
-    setEmail("");
-    setPassword("");
-  };
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full min-w-lg rounded-3xl shadow-2xl p-8 md:p-10 space-y-8">
-        <h1 className="text-4xl font-extrabold text-center text-gray-800">
-          {isSignIn ? "Welcome Back" : "Create Account"}
-        </h1>
-        <p className="text-center text-gray-500 text-sm">
-          {isSignIn
-            ? "Sign in to continue to your account"
-            : "Sign up to get started"}
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {!isSignIn && (
-            <div>
-              <label className="block mb-2 font-medium text-gray-700">
-                Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full border border-gray-300 rounded-2xl px-4 py-3 text-gray-700 focus:ring-2 focus:ring-indigo-400 focus:outline-none transition placeholder-gray-400"
-                placeholder="Your Name"
-                required
-              />
-            </div>
-          )}
-
-          <div>
-            <label className="block mb-2 font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded-2xl px-4 py-3 text-gray-700 focus:ring-2 focus:ring-indigo-400 focus:outline-none transition placeholder-gray-400"
-              placeholder="you@example.com"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-2xl px-4 py-3 text-gray-700 focus:ring-2 focus:ring-indigo-400 focus:outline-none transition placeholder-gray-400"
-              placeholder="********"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-2xl text-lg shadow-md hover:bg-indigo-700 transition"
-          >
-            {isSignIn ? "Sign In" : "Sign Up"}
-          </button>
-        </form>
-
-        <p className="text-center text-gray-500 text-sm">
-          {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
-          <button
-            onClick={() => setIsSignIn(!isSignIn)}
-            className="text-indigo-600 font-medium hover:underline focus:outline-none"
-          >
-            {isSignIn ? "Sign Up" : "Sign In"}
-          </button>
-        </p>
-
-        <div className="flex items-center justify-center space-x-3">
-          <span className="h-px w-10 bg-gray-300"></span>
-          <span className="text-gray-400 text-sm">OR</span>
-          <span className="h-px w-10 bg-gray-300"></span>
+    <div className="min-h-screen bg-zinc-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-foreground">Welcome back</h2>
+          <p className="mt-2 text-muted-foreground">
+            Sign in to your account to continue sharing your stories
+          </p>
         </div>
 
-        <div className="flex justify-center gap-4">
-          <button className="flex items-center justify-center flex-1 py-3 rounded-2xl border border-gray-300 text-gray-700 transition gap-2">
-            <FcGoogle className="w-5 h-5" /> Google
-          </button>
+        {/* Sign In Form */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign In</CardTitle>
+            <CardDescription>
+              Enter your email and password to access your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form className="space-y-6">
+              {/* Email Field */}
+              <div>
+                <Label htmlFor="email">Email address</Label>
+                <div className="relative mt-1">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Password Field */}
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <div className="relative mt-1">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    className="pl-10 pr-10"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Forgot Password Link */}
+              <div className="flex items-center justify-between">
+                <div className="text-sm">
+                  <a href="#" className="font-medium text-blue-700">
+                    Forgot your password?
+                  </a>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="w-full bg-blue-700 hover:bg-blue-800"
+                disabled={isLoading}
+              >
+                {isLoading ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+
+            {/* Sign Up Link */}
+            <div className="mt-6 text-center">
+              <p className="text-sm text-muted-foreground">
+                Don't have an account?{" "}
+                <Link href="/signup" className="font-medium text-blue-700">
+                  Sign up for free
+                </Link>
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Demo Note */}
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground bg-muted p-4 rounded-md">
+            <strong>Demo Note:</strong> This is a frontend-only demo. Use any
+            email and password to sign in.
+          </p>
         </div>
       </div>
     </div>
