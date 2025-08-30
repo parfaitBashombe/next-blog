@@ -26,7 +26,7 @@ const Page = () => {
           </div>
 
           <div className="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-            {news.map((post) => (
+            {news.slice(0, 6).map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
           </div>
