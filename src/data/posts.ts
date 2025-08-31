@@ -76,6 +76,7 @@ export const posts: IPost[] = [
       "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
     category: "Artificial Intelligence",
     tags: ["AI", "Smart Tools", "Innovation"],
+    isFeatured: true,
   },
   {
     id: "5",

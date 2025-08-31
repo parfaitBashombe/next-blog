@@ -1,19 +1,97 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { posts } from "@/data/posts";
 import PostCard from "@/components/post-card";
 import Link from "next/link";
 import FeaturedArticle from "@/components/featured-article";
-import { Mail, ArrowRight } from "lucide-react";
+import { Mail, ArrowLeft, ArrowRight } from "lucide-react";
 
 const Page = () => {
   const news = posts.filter((post) => !post.isFeatured);
+  const featuredArticles = posts.filter((post) => post.isFeatured);
+
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (featuredArticles.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % featuredArticles.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [featuredArticles.length]);
+
+  const goToSlide = (index: number) => setCurrent(index);
+  const nextSlide = () =>
+    setCurrent((prev) => (prev + 1) % featuredArticles.length);
+  const prevSlide = () =>
+    setCurrent(
+      (prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length
+    );
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 space-y-24">
-        <FeaturedArticle />
+        {featuredArticles.length > 0 && (
+          <section className="relative overflow-hidden rounded-3xl shadow-2xl border border-gray-200">
+            <div
+              className="flex transition-transform duration-700 ease-out"
+              style={{ transform: `translateX(-${current * 100}%)` }}
+            >
+              {featuredArticles.map((article) => (
+                <div key={article.id} className="min-w-full">
+                  <div className="flex">
+                    <FeaturedArticle data={article} />
+                  </div>
+                </div>
+              ))}
+            </div>
 
+            {featuredArticles.length > 1 && (
+              <>
+                <button
+                  onClick={prevSlide}
+                  aria-label="Previous"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-white/90 hover:bg-white shadow p-2 z-10"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  aria-label="Next"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-white/90 hover:bg-white shadow p-2 z-10"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+
+            {featuredArticles.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                {featuredArticles.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToSlide(index)}
+                    aria-label={`Go to slide ${index + 1}`}
+                    className={`h-2.5 rounded-full transition-all ${
+                      index === current
+                        ? "w-6 bg-blue-600"
+                        : "w-2.5 bg-gray-300"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+
+            <span className="sr-only" aria-live="polite">
+              Slide {current + 1} of {featuredArticles.length}
+            </span>
+          </section>
+        )}
+
+        {/* Latest Stories Section */}
         <section className="space-y-16">
           <div className="text-center space-y-4">
             <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
@@ -42,6 +120,7 @@ const Page = () => {
           </div>
         </section>
 
+        {/* Newsletter Section */}
         <section className="relative">
           <div className="relative bg-white border border-gray-200 rounded-3xl p-8 md:p-16 shadow-2xl overflow-hidden">
             <div className="relative z-10 text-center max-w-4xl mx-auto">
@@ -75,11 +154,6 @@ const Page = () => {
               <p className="text-gray-500 text-sm mt-5">
                 Join our community of thousands of readers.
               </p>
-            </div>
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-              <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob"></div>
-              <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-purple-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000"></div>
-              <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-pink-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000"></div>
             </div>
           </div>
         </section>

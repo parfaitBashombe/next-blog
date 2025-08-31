@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { posts } from "@/data/posts";
+import { IPost, posts } from "@/data/posts";
 import { ArrowRight, Calendar } from "lucide-react";
 
-const FeaturedArticle = () => {
+type Props = {
+  data: IPost;
+};
+
+const FeaturedArticle = ({ data }: Props) => {
   const featured = posts?.find((post) => post.isFeatured);
 
   if (!featured) return null;
