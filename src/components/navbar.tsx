@@ -16,6 +16,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/lib/client";
+import {
+  User,
+  Session,
+  AuthChangeEvent,
+  UserResponse,
+} from "@supabase/supabase-js";
 
 const links = [
   { name: "Home", href: "/" },
@@ -28,7 +34,7 @@ const links = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const supabase = createClient();
 
   const pathname = usePathname();
@@ -37,10 +43,12 @@ export default function Navbar() {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
 
-    supabase.auth.getUser().then(({ data }) => setUser(data.user ?? null));
+    supabase.auth
+      .getUser()
+      .then(({ data }: UserResponse) => setUser(data.user ?? null));
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (_event: AuthChangeEvent, session: Session) => {
         setUser(session?.user ?? null);
       }
     );

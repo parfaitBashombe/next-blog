@@ -122,6 +122,7 @@ export const posts: IPost[] = [
       "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
     category: "Blockchain",
     tags: ["Blockchain", "Tech", "Innovation"],
+    isFeatured: true,
   },
   {
     id: "8",
